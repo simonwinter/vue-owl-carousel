@@ -17,6 +17,7 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import 'owl.carousel';
 
 import events from './utils/events';
+import autoplayEvents from './utils/autoplay-events';
 
 export default {
   name: 'VOwlCarousel',
@@ -66,6 +67,10 @@ export default {
       default: false,
     },
     autoWidth: {
+      type: Boolean,
+      default: false,
+    },
+    autoHeight: {
       type: Boolean,
       default: false,
     },
@@ -230,7 +235,7 @@ export default {
   },
 
   mounted: function() {
-    const owl = $('#' + this.elementHandle).owlCarousel({
+    let options = {
       items: this.items,
       margin: this.margin,
       loop: this.loop,
@@ -243,6 +248,7 @@ export default {
       merge: this.merge,
       mergeFit: this.mergeFit,
       autoWidth: this.autoWidth,
+      autoHeight: this.autoHeight,
       startPosition: this.startPosition,
       uRLhashListener: this.uRLhashListener,
       nav: this.nav,
@@ -280,7 +286,9 @@ export default {
       navContainer: this.navContainer,
       dotsContainer: this.dotsContainer,
       checkVisible: this.checkVisible,
-    });
+    }
+
+    let owl = $('#' + this.elementHandle).owlCarousel(options);
 
     $('#' + this.prevHandler).click(function() {
       owl.trigger('prev.owl.carousel');
@@ -292,6 +300,12 @@ export default {
 
     events.forEach((eventName) => {
       owl.on(`${eventName}.owl.carousel`, (event) => {
+        this.$emit(eventName, event);
+      });
+    });
+
+    autoplayEvents.forEach((eventName) => {
+      owl.on(`${eventName}`, (event) => {
         this.$emit(eventName, event);
       });
     });
