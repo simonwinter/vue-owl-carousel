@@ -288,6 +288,8 @@ export default {
       checkVisible: this.checkVisible,
     }
 
+    console.log(options)
+
     let owl = $('#' + this.elementHandle).owlCarousel(options);
 
     $('#' + this.prevHandler).click(function() {
